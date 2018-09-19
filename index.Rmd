@@ -1,0 +1,138 @@
+---
+title: "Web scraping with R"
+subtitle: "and other ways to wring data from the internet"
+author: "Alexa Fredston-Hermann"
+date: "September 20, 2018"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'test.css']
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+# Hello! 
+
+---
+## To do data science, we need data.
+
+Do you know of any online databases of scientific information? 
+
+What databases do you wish were online that aren't easily accessible yet? 
+
+---
+## How do scientists get their data? 
+
+* Direct collection of observations and experiments
+* Collaboration on private/internal data 
+* Using data collected by others (like me!) 
+
+**More and more, scientists are relying on data that is not stored on their hard drives, but is instead extracted directly from online databases or other unconventional sources.**
+
+---
+## Unconventional data sources 
+
+Until recently, to most scientists, data lived exclusively in spreadsheets. Now, we're realizing that data is all around us. 
+
+What data sources were used in the articles I asked you to read? 
+
+Can you think of other unconventional data sources? 
+
+Some unconventional data, like the Florida fishing photos, no one thought to identify. Other data we know is out there, but have a hard time translating into a format that can be analyzed. That problem can be solved with **data mining** or **scraping**.  
+
+---
+## Frequent data mining needs 
+
+* I have a stack of PDF or text documents, and I want to extract or count particular words. 
+* I study a particular place and I need to use some big, general dataset in my analysis that I didn't collect and don't have on my hard drive. 
+* I found a really helpful form to look up country-level statistics, but you can only enter one at a time and I have 50! 
+
+---
+## APIs
+
+These problems can (mostly) be solved using an **application programming interface**, or API. 
+
+APIs allow your computer to communicate to other servers, often in different programming languages, without opening a browser or navigating or clicking on anything. APIs are what enable:
+
+* Travel aggregators like Kayak or Expedia to search airline websites 
+* Third-party websites to embed Google Maps or links to buy products on Amazon 
+* Online credit card transactions to be processed on a secure server 
+
+---
+## APIs
+
+We will *not* be writing our own APIs today. 
+
+<p align="center">
+<img src="much-avoid-so-relieved.jpg" height="300" style="text-align:center" />
+</p>
+
+That's because they are now pretty easy to write (or so I hear), and a lot of people who design R packages have already written them for hundreds of useful data sources. 
+
+---
+## API example 1: Twitter 
+
+We can't run through this example ourselves because Twitter now requires anyone using its API to register as a developer. If you want to try this at home, I recommend [this tutorial](http://dataaspirant.com/2018/03/22/twitter-sentiment-analysis-using-r/) or [an even more thorough one](https://rud.is/books/21-recipes/using-oauth-to-access-twitter-apis.html). 
+
+Can anyone think of Twitter analytics from the news recently? 
+
+---
+## API example 1: Twitter
+
+Twitter is a great example of using data science (in this case, text analysis) to understand what people care about or how they are reacting to an issue. Text analysis is what determines trending topics, or describes the overall "sentiments" of an account or an issue. 
+
+[Tweets from Donald Trump during his campaign:](http://varianceexplained.org/r/trump-tweets/) are tweets from an Android (his phone) different in content or sentiment than tweets from an iPhone (his staffers)? 
+
+[#RoyalWedding:](http://tabvizexplorer.com/sentiment-analysis-using-r-and-twitter/) how did people in the US feel about Harry and Meghan? 
+
+---
+## API example 2: my dissertation research
+
+### I study what makes fish migrate in response to climate change. 
+
+What kind of data do you think I need to do this? 
+
+---
+## API example 2: my dissertation research
+
+The dataset I use (itself stored in an R package and in the cloud, which is a separate story) has hundreds of fish species recorded in it. When working at this scale, it's really hard to tell what the different species are! Is it a predator? Is it two inches or twenty feet long? Does it live on coral reefs or in the deep oceans? 
+
+[Fishbase](http://www.fishbase.org/search.php) collates a huge amount of useful data about fish species. However, it's an annoying interface, tedious to browse, and you can only search one fish at once. 
+
+---
+## API example 2: my dissertation research
+
+### Enter [rfishbase](https://ropensci.org/tutorials/rfishbase_tutorial/)!
+
+Some kind people wrote an R package that uses an API to query fishbase. 
+
+```{r results="hide"}
+# install.packages("devtools")
+# devtools::install_github("ropensci/rfishbase")
+library(rfishbase) 
+```
+
+---
+## API example 2: my dissertation research
+
+```{r results="hide", message=FALSE, warning=FALSE}
+fishlist <- c("Carcharodon carcharias","Carcharhinus leucas","Carcharhinus longimanus") # create our list of sharks
+
+valid.fishlist <- validate_names(fishlist) # check that our Latin names match up with the fishbase ones
+
+fishdat <- species(valid.fishlist) # get 100 different pieces of information for each species in a matter of seconds! 
+```
+
+---
+## Other useful APIs for environmental science
+
+* NOAA field and remote sensing data on the oceans (chlorophyll, larvae, temperature, salinity, depth, etc.):  [rerddap](https://ropensci.org/tutorials/rerddap_tutorial/)
+* Worldwide inventory of biological observations, the Global Biodiversity Information Facility: [rgbif](https://ropensci.org/tutorials/rgbif_tutorial/)
+* Multiple taxonomic databases to validate Latin names: [taxize](https://ropensci.org/tutorials/taxize_tutorial/)
+* Shape files with borders of states and countries for the globe: [rnaturalearth](https://ropensci.org/tutorials/rnaturalearth_tutorial/)
+
+Find more with Google, #rstats ... 
+
+---
+# Questions? 
